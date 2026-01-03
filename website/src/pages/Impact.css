@@ -1,0 +1,91 @@
+.impact-hero {
+    background: linear-gradient(rgba(0, 51, 102, 0.8), rgba(0, 51, 102, 0.8)), url('../assets/hero-bg-new.png');
+    background-size: cover;
+    background-position: center;
+    padding: 8rem 0 4rem;
+    color: white;
+    text-align: center;
+}
+
+.impact-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.impact-hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.impact-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.impact-stat-card {
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.impact-stat-card:hover {
+    transform: translateY(-10px);
+}
+
+.impact-stat-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.impact-stat-card h3 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.impact-stat-card p {
+    color: #666;
+    font-weight: 600;
+}
+
+.impact-story {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.story-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+.story-text p {
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.video-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 992px) {
+    .impact-story {
+        grid-template-columns: 1fr;
+    }
+}
