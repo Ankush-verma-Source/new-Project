@@ -40,9 +40,9 @@ const Impact = () => {
 
             <section className="section section-alt">
                 <div className="container">
-                    <div className="impact-story">
-                        <div className="story-text" data-aos="fade-right">
-                            <div className="pill-tag">Success Stories</div>
+                    <div className="impact-story" style={{ display: 'block', maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+                        <div className="story-text" data-aos="fade-up" style={{ margin: '0 auto' }}>
+                            <div className="pill-tag" style={{ display: 'inline-block', margin: '0 auto 15px' }}>Success Stories</div>
                             <h2>Real Stories, Real Change</h2>
                             <p>
                                 Since our inception, we have been dedicated to breaking down the barriers to higher education. Our impact goes beyond numbers; it's about the dreams we've helped realize and the futures we've helped build.
@@ -50,11 +50,6 @@ const Impact = () => {
                             <p>
                                 From small towns in Jammu to international universities in Canada and the UK, our students are making their mark on the world.
                             </p>
-                        </div>
-                        <div className="story-image" data-aos="fade-left">
-                            <div className="video-placeholder">
-                                <span>Impact Documentary Video Placeholder</span>
-                            </div>
                         </div>
                     </div>
                 </div>

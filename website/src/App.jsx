@@ -8,7 +8,10 @@ import About from './pages/About';
 import Scholarships from './pages/Scholarships';
 import Impact from './pages/Impact';
 import Contact from './pages/Contact';
-import PlaceholderPage from './components/PlaceholderPage';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
+import NotFound from './pages/NotFound';
 import './index.css';
 
 function App() {
@@ -24,8 +27,16 @@ function App() {
             <Route path="/scholarships" element={<Scholarships />} />
             <Route path="/impact" element={<Impact />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/apply" element={<PlaceholderPage title="Apply for Scholarship" />} />
-            <Route path="*" element={<PlaceholderPage title="Page Not Found" />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />

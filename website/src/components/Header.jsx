@@ -38,8 +38,10 @@ const Header = () => {
         closeMenu();
     };
 
+    const isAdminPage = location.pathname.startsWith('/admin');
+
     return (
-        <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
+        <header className={`header ${isScrolled ? 'scrolled' : ''} ${isAdminPage ? 'admin-header' : ''}`}>
             <div className="container header-container">
                 <Link to="/" className="logo-container" onClick={closeMenu}>
                     <img src={logo} alt="GlobalEdu Guide" className="logo-img" />

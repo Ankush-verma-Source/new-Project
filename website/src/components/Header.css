@@ -156,3 +156,33 @@
         background-color: var(--primary-color) !important;
     }
 }
+
+/* Force solid dark theme for administrative headers */
+.header.admin-header {
+    background-color: #002147 !important;
+    backdrop-filter: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.header.admin-header.scrolled {
+    top: 0;
+    background-color: #002147 !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    border-bottom: none;
+}
+
+.header.admin-header .logo-text,
+.header.admin-header .nav-link,
+.header.admin-header.scrolled .logo-text,
+.header.admin-header.scrolled .nav-link {
+    color: #ffffff !important;
+}
+
+.header.admin-header.scrolled .bar,
+.header.admin-header .bar {
+    background-color: #ffffff !important;
+}
+
+.header.admin-header .nav-link:hover {
+    color: var(--accent-color) !important;
+}

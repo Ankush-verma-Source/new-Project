@@ -250,7 +250,14 @@ const Home = () => {
                 <div className="container">
                     <h2 data-aos="fade-up">Ready to Shape Your Future?</h2>
                     <p data-aos="fade-up" data-aos-delay="100">Apply for our scholarship programs today and take the first step towards your dreams.</p>
-                    <Link to="/apply" className="btn btn-accent btn-lg" data-aos="zoom-in" data-aos-delay="200">Apply Now</Link>
+                    <button 
+                        onClick={() => document.getElementById('apply-form')?.scrollIntoView({ behavior: 'smooth' })} 
+                        className="btn btn-accent btn-lg" 
+                        data-aos="zoom-in" 
+                        data-aos-delay="200"
+                    >
+                        Apply Now
+                    </button>
                 </div>
             </section>
         </div>
