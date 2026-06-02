@@ -176,3 +176,20 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 480px) {
+  .admin-login-container {
+    padding: 130px 12px 60px;
+  }
+  .login-card {
+    padding: 28px 20px;
+    border-radius: 12px;
+  }
+  .login-header h2 {
+    font-size: 21px;
+  }
+  .input-with-icon input {
+    padding: 10px 10px 10px 40px;
+    font-size: 14px;
+  }
+}

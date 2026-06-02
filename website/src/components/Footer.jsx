@@ -19,18 +19,14 @@ const Footer = () => {
                             GlobalEdu Guide Foundation is dedicated to making higher education accessible and affordable for all students through generous scholarship programs and comprehensive support. Join us in our mission to empower the next generation of leaders and innovators.
                         </p>
                         <div className="social-links">
-                            <a href="#" className="social-icon"><FaFacebookF /></a>
-                            <a href="#" className="social-icon"><FaTwitter /></a>
-                            <a href="#" className="social-icon"><FaInstagram /></a>
-                            <a href="#" className="social-icon"><FaLinkedinIn /></a>
+                            <a href="https://www.instagram.com/global_education_guide?igsh=MXN0dDV6dGQwY2NtbA==" target="_blank" rel="noopener noreferrer" className="social-icon" title="Instagram"><FaInstagram /></a>
                         </div>
                     </div>
 
                     <div className="footer-column contact-col">
                         <div className="contact-item">
                             <h3>Phone</h3>
-                            <p><FaPhoneAlt className="icon" /> +91 941 910 1940</p>
-                            <p><FaPhoneAlt className="icon" /> +91 914 983 3760</p>
+                            <p><FaPhoneAlt className="icon" /> +91 9103252871</p>
                         </div>
                         <div className="contact-item">
                             <h3>Email</h3>

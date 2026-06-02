@@ -8,7 +8,7 @@ const TopBar = () => {
             <div className="container top-bar-container">
                 <div className="helpline">
                     <span className="helpline-icon"><FaPhoneAlt /></span>
-                    <span>Help Line : +91 941 910 1940</span>
+                    <span>Help Line : +91 9103252871</span>
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@
     top: 40px;
     /* Below TopBar */
     left: 0;
-    width: 100vw;
+    width: 100%;
     z-index: 1000;
     transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.1);
@@ -154,6 +154,20 @@
 
     .hamburger.active .bar {
         background-color: var(--primary-color) !important;
+    }
+
+    /* Overrides to ensure visibility on admin routes */
+    .header.admin-header .nav-menu {
+        background-color: #002147 !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header.admin-header .nav-link {
+        color: #ffffff !important;
+    }
+
+    .header.admin-header .hamburger.active .bar {
+        background-color: #ffffff !important;
     }
 }
 

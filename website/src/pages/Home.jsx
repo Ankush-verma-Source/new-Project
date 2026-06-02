@@ -168,7 +168,7 @@ const Home = () => {
             {/* Immigration Assistance Section */}
             <section className="section" id="immigration">
                 <div className="container">
-                    <div className="foundation-content" style={{ gridTemplateColumns: '1fr 1fr' }}>
+                    <div className="foundation-content">
                         <div className="foundation-image-wrapper" data-aos="fade-right">
                             <img src={immigrationImg} alt="Immigration Assistance" className="foundation-image" />
                         </div>
