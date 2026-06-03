@@ -30,8 +30,8 @@ const Footer = () => {
                         </div>
                         <div className="contact-item">
                             <h3>Email</h3>
-                            <p><FaEnvelope className="icon" /> info@globaleduguide.com</p>
-                            <p><FaEnvelope className="icon" /> scholarship@globaleduguide.com</p>
+                            <p><FaEnvelope className="icon" /> info@globaleducationguide.in</p>
+                            <p><FaEnvelope className="icon" /> scholarship@globaleducationguide.in</p>
                         </div>
                         <div className="contact-item">
                             <h3>Address</h3>

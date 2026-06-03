@@ -172,8 +172,8 @@ const Contact = () => {
                                     <div className="info-icon"><FaEnvelope /></div>
                                     <div>
                                         <h3>Email</h3>
-                                        <p>info@globaleduguide.com</p>
-                                        <p>scholarship@globaleduguide.com</p>
+                                        <p>info@globaleducationguide.in</p>
+                                        <p>scholarship@globaleducationguide.in</p>
                                     </div>
                                 </div>
                                 <div className="info-item">
