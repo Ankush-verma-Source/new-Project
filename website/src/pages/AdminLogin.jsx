@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './AdminLogin.css';
+import { API_BASE_URL } from '../config';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
@@ -25,7 +26,7 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/admin/login', {
+      const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

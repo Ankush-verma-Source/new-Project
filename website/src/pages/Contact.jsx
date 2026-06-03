@@ -3,6 +3,7 @@ import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaClock } from 'react-icons/fa'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './Contact.css';
+import { API_BASE_URL } from '../config';
 
 const countryCodes = [
   { code: '+91', iso: 'IN' },
@@ -115,7 +116,7 @@ const Contact = () => {
         const combinedPhone = `${countryCode} ${cleanPhone}`;
 
         try {
-            const response = await fetch('/api/submissions/contact', {
+            const response = await fetch(`${API_BASE_URL}/api/submissions/contact`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

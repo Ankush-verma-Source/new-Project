@@ -113,10 +113,10 @@ const Home = () => {
 
                         <div className="foundation-text" data-aos="fade-left">
                             <div className="pill-tag">★ Foundation with a Purpose</div>
-                            <h2 className="foundation-title">Welcome to GlobalEdu Guide Foundation</h2>
+                            <h2 className="foundation-title">Welcome to Global Education Guide Foundation</h2>
 
                             <p className="foundation-desc">
-                                Located at 17 A/C Gandhi Nagar, Jammu, Jammu and Kashmir, GlobalEdu Guide Foundation is dedicated to making higher education accessible and affordable for every deserving student. We provide scholarships ranging from 60% to 100% for both undergraduate (UG) and postgraduate (PG) programs. Our mission is to support students in their academic journey by facilitating admissions to various esteemed colleges and universities, ensuring no deserving student is left behind due to financial constraints. Additionally, we offer free education for students belonging to SC/ST categories.
+                                Located at 17 A/C Gandhi Nagar, Jammu, Jammu and Kashmir, Global Education Guide Foundation is dedicated to making higher education accessible and affordable for every deserving student. We provide scholarships ranging from 60% to 100% for both undergraduate (UG) and postgraduate (PG) programs. Our mission is to support students in their academic journey by facilitating admissions to various esteemed colleges and universities, ensuring no deserving student is left behind due to financial constraints. Additionally, we offer free education for students belonging to SC/ST categories.
                             </p>
 
                             <div className="rating-block">
@@ -176,7 +176,7 @@ const Home = () => {
                             <div className="pill-tag">★ International Institutes You Dream</div>
                             <h2 className="foundation-title">Reliable & Transparent Immigration Assistance for Students Via Foundation</h2>
                             <p className="foundation-desc">
-                                GlobalEdu Guide Foundation is committed to providing you with the most authentic, legal, and credible visa information. We offer fully assisted overseas education & settlement guidance to cater individual needs.
+                                Global Education Guide Foundation is committed to providing you with the most authentic, legal, and credible visa information. We offer fully assisted overseas education & settlement guidance to cater individual needs.
                             </p>
                             <ul className="check-list">
                                 <li>Mission of Our Foundation is to Make Students Successful Internationally</li>
@@ -199,7 +199,7 @@ const Home = () => {
                     </div>
                     <div className="about-content" data-aos="fade-up">
                         <p className="lead-text">
-                            GlobalEdu Guide Foundation has established partnerships and MOUs with top colleges and universities in Punjab, Haryana, Chandigarh, and Delhi. We are committed to helping students secure direct admissions to these prestigious institutions while offering scholarships ranging from 60% to 100%.
+                            Global Education Guide Foundation has established partnerships and MOUs with top colleges and universities in Punjab, Haryana, Chandigarh, and Delhi. We are committed to helping students secure direct admissions to these prestigious institutions while offering scholarships ranging from 60% to 100%.
                         </p>
                         {/* Logo Grid */}
                         <div className="institutes-grid" style={{ marginTop: '3rem', textAlign: 'center' }}>
@@ -219,7 +219,7 @@ const Home = () => {
                     <div className="testimonials-grid">
                         <div className="testimonial-card" data-aos="fade-right">
                             <div className="quote-icon">❝</div>
-                            <p className="testimonial-text">GlobalEdu Guide helped me secure a 100% scholarship for my engineering degree. I couldn't have done it without their mentorship.</p>
+                            <p className="testimonial-text">Global Education Guide helped me secure a 100% scholarship for my engineering degree. I couldn't have done it without their mentorship.</p>
                             <div className="testimonial-author">
                                 <h4>Rahul Kumar</h4>
                                 <span>B.Tech Student</span>

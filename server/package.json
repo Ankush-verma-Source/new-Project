@@ -1,7 +1,7 @@
 {
-  "name": "globaledu-server",
+  "name": "globaleducation-server",
   "version": "1.0.0",
-  "description": "Secure Express backend for GlobalEdu Guide form handling and admin authentication",
+  "description": "Secure Express backend for Global Education Guide form handling and admin authentication",
   "main": "index.js",
   "type": "module",
   "scripts": {

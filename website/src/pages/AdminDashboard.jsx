@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGraduationCap, FaEnvelope, FaSearch, FaSignOutAlt, FaTrashAlt, FaDownload, FaFilter, FaClock, FaSync } from 'react-icons/fa';
 import './AdminDashboard.css';
+import { API_BASE_URL } from '../config';
 
 const AdminDashboard = () => {
   const [applications, setApplications] = useState([]);
@@ -55,13 +56,13 @@ const AdminDashboard = () => {
     setError('');
 
     try {
-      const appResponse = await fetch('/api/admin/applications', {
+      const appResponse = await fetch(`${API_BASE_URL}/api/admin/applications`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
-      const enqResponse = await fetch('/api/admin/enquiries', {
+      const enqResponse = await fetch(`${API_BASE_URL}/api/admin/enquiries`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -165,7 +166,7 @@ const AdminDashboard = () => {
     const { id, type } = itemToDelete;
 
     try {
-      const response = await fetch(`/api/admin/${type}/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/${type}/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -234,7 +235,7 @@ const AdminDashboard = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `globaledu_${activeTab}_export.csv`);
+    link.setAttribute('download', `globaleducation_${activeTab}_export.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();

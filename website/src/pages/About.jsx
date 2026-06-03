@@ -13,7 +13,7 @@ const About = () => {
         <div className="about-page">
             <section className="about-hero">
                 <div className="container">
-                    <h1 data-aos="fade-up">About GlobalEdu Guide Foundation</h1>
+                    <h1 data-aos="fade-up">About Global Education Guide Foundation</h1>
                     <p data-aos="fade-up" data-aos-delay="100">Empowering the next generation of leaders through accessible education.</p>
                 </div>
             </section>
@@ -28,7 +28,7 @@ const About = () => {
                             <div className="pill-tag">Our Story</div>
                             <h2>Dedicated to Your Educational Success</h2>
                             <p>
-                                Incorporated on May 18, 2023, GlobalEdu Guide Foundation is a non-profit organization registered as a Section 8 company. Based in Jammu, we are committed to bridging the gap between academic aspirations and financial realities.
+                                Incorporated on May 18, 2023, Global Education Guide Foundation is a non-profit organization registered as a Section 8 company. Based in Jammu, we are committed to bridging the gap between academic aspirations and financial realities.
                             </p>
                             <p>
                                 We believe that every student deserves a chance to excel, regardless of their financial background. Our foundation works tirelessly to provide scholarships ranging from 60% to 100% for both undergraduate and postgraduate programs in India and abroad.

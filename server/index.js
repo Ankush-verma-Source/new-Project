@@ -9,6 +9,11 @@ import Enquiry from './models/Enquiry.js';
 
 dotenv.config();
 
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL ERROR: JWT_SECRET is not defined in environment variables.');
+  process.exit(1);
+}
+
 // Connect to MongoDB
 connectDB();
 
@@ -42,7 +47,7 @@ const protect = async (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'global_edu_secure_jwt_token_key_2026');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       
       const admin = await Admin.findById(decoded.id).select('-password');
       if (!admin) {
@@ -173,7 +178,7 @@ app.post('/api/admin/login', async (req, res) => {
     if (admin && (await admin.matchPassword(password))) {
       const token = jwt.sign(
         { id: admin._id },
-        process.env.JWT_SECRET || 'global_edu_secure_jwt_token_key_2026',
+        process.env.JWT_SECRET,
         { expiresIn: '30d' }
       );
       
@@ -250,7 +255,7 @@ app.delete('/api/admin/enquiries/:id', protect, async (req, res) => {
 
 // Fallback Route
 app.get('/', (req, res) => {
-  res.send('GlobalEdu Guide Backend Server is running...');
+  res.send('Global Education Guide Backend Server is running...');
 });
 
 const PORT = process.env.PORT || 5000;

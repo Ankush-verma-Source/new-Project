@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.jpeg';
+import logo from '../assets/logo.png';
 import './Header.css';
 
 const Header = () => {
@@ -44,8 +44,8 @@ const Header = () => {
         <header className={`header ${isScrolled ? 'scrolled' : ''} ${isAdminPage ? 'admin-header' : ''}`}>
             <div className="container header-container">
                 <Link to="/" className="logo-container" onClick={closeMenu}>
-                    <img src={logo} alt="GlobalEdu Guide" className="logo-img" />
-                    <span className="logo-text">GlobalEdu Guide</span>
+                    <img src={logo} alt="Global Education Guide" className="logo-img" />
+                    <span className="logo-text">Global Education Guide</span>
                 </Link>
 
                 <nav className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>

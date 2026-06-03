@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/logo.jpeg';
+import logo from '../assets/logo.png';
 import './Hero.css';
+import { API_BASE_URL } from '../config';
 
 const countryCodes = [
   { code: '+91', iso: 'IN' },
@@ -103,7 +104,7 @@ const Hero = () => {
         const combinedPhone = `${countryCode} ${cleanPhone}`;
 
         try {
-            const response = await fetch('/api/submissions/apply', {
+            const response = await fetch(`${API_BASE_URL}/api/submissions/apply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -133,8 +134,8 @@ const Hero = () => {
     return (
         <section className="hero">
             <div className="container hero-logo-container">
-                {/* <img src={logo} alt="GlobalEdu Guide Logo" className="hero-logo" /> */}
-                {/* <span className="hero-logo-text">GlobalEdu Guide</span> */}
+                {/* <img src={logo} alt="Global Education Guide Logo" className="hero-logo" /> */}
+                {/* <span className="hero-logo-text">Global Education Guide</span> */}
             </div>
             <div className="container hero-layout">
                 <div className="hero-text">
@@ -166,7 +167,7 @@ const Hero = () => {
                             )}
 
                             <div className="form-logo-container">
-                                <img src={logo} alt="GlobalEdu Guide" className="form-logo" />
+                                <img src={logo} alt="Global Education Guide" className="form-logo" />
                             </div>
                             <h3>Apply Scholarship</h3>
                             <p>Fill out the form below to apply for scholarships.</p>
