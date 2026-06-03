@@ -51,7 +51,7 @@ const Header = () => {
                 <nav className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
                     <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMenu}>Home</Link>
                     <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} onClick={closeMenu}>About Us</Link>
-                    <Link to="/scholarships" className={`nav-link ${location.pathname === '/scholarships' ? 'active' : ''}`} onClick={closeMenu}>Scholarships</Link>
+                    <Link to="/scholarships" className={`nav-link ${location.pathname === '/scholarships' ? 'active' : ''}`} onClick={closeMenu}>Counselling & Scholarships</Link>
                     <Link to="/impact" className={`nav-link ${location.pathname === '/impact' ? 'active' : ''}`} onClick={closeMenu}>Our Impact</Link>
                     <Link to="/contact" className={`nav-link ${location.pathname === '/contact' ? 'active' : ''}`} onClick={closeMenu}>Contact Us</Link>
                     <button onClick={handleApplyClick} className="btn btn-accent nav-btn">Apply Now</button>

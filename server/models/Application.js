@@ -20,6 +20,11 @@ const ApplicationSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
+  },
+  qualification: {
+    type: String,
+    required: true,
+    trim: true
   }
 }, { timestamps: true });
 

@@ -158,7 +158,7 @@ const Contact = () => {
                         <div className="contact-info" data-aos="fade-right">
                             <div className="pill-tag">Get In Touch</div>
                             <h2>Reach Out to Us</h2>
-                            <p>Have questions about scholarships or admissions? Our team is ready to assist you.</p>
+                            <p>Have questions about admissions, career counselling, or scholarship guidance? Our team is ready to assist you.</p>
 
                             <div className="info-items">
                                 <div className="info-item">

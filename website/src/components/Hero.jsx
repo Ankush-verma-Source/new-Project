@@ -63,6 +63,7 @@ const Hero = () => {
     const [phone, setPhone] = useState('');
     const [countryCode, setCountryCode] = useState('+91');
     const [course, setCourse] = useState('');
+    const [qualification, setQualification] = useState('');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
@@ -77,7 +78,7 @@ const Hero = () => {
         const cleanPhone = phone.replace(/\D/g, ''); // Keep only numeric digits
 
         // 1. Client-side Validation Checks
-        if (!cleanName || !cleanEmail || !cleanPhone || !course) {
+        if (!cleanName || !cleanEmail || !cleanPhone || !course || !qualification) {
             setError('All fields are required.');
             setLoading(false);
             return;
@@ -109,7 +110,7 @@ const Hero = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name: cleanName, email: cleanEmail, phone: combinedPhone, course })
+                body: JSON.stringify({ name: cleanName, email: cleanEmail, phone: combinedPhone, course, qualification })
             });
 
             const data = await response.json();
@@ -120,6 +121,7 @@ const Hero = () => {
                 setEmail('');
                 setPhone('');
                 setCourse('');
+                setQualification('');
             } else {
                 setError(data.message || 'Something went wrong. Please try again.');
             }
@@ -141,10 +143,10 @@ const Hero = () => {
                 <div className="hero-text">
                     <h1 className="hero-title">Empowering Futures Through Education in India & Abroad</h1>
                     <p className="hero-subtitle">
-                        We provide scholarships, mentorship, and guidance to help students achieve their dreams of higher education in India and abroad.
+                        We provide expert career counselling, admission guidance, and support in securing scholarships to help students achieve their dreams of higher education in India and abroad.
                     </p>
                     <div className="hero-buttons">
-                        <button onClick={() => document.getElementById('apply-form').scrollIntoView({ behavior: 'smooth' })} className="btn btn-accent">Apply for Scholarship</button>
+                        <button onClick={() => document.getElementById('apply-form').scrollIntoView({ behavior: 'smooth' })} className="btn btn-accent">Apply for Counselling</button>
                         <Link to="/about" className="btn" style={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.3)' }}>Learn More</Link>
                     </div>
                 </div>
@@ -153,9 +155,9 @@ const Hero = () => {
                     {success ? (
                         <div className="form-success-container">
                             <div className="success-icon-check">✓</div>
-                            <h3>Application Received!</h3>
-                            <p>Thank you for applying. We have saved your details and will get in touch with you shortly.</p>
-                            <button onClick={() => setSuccess(false)} className="btn btn-accent btn-block" style={{ marginTop: '20px' }}>Apply Another</button>
+                            <h3>Counselling Request Received!</h3>
+                            <p>Thank you. We have saved your details and will get in touch with you shortly for your free counselling session.</p>
+                            <button onClick={() => setSuccess(false)} className="btn btn-accent btn-block" style={{ marginTop: '20px' }}>Request Another</button>
                         </div>
                     ) : (
                         <form className="hero-form" onSubmit={handleSubmit}>
@@ -169,8 +171,8 @@ const Hero = () => {
                             <div className="form-logo-container">
                                 <img src={logo} alt="Global Education Guide" className="form-logo" />
                             </div>
-                            <h3>Apply Scholarship</h3>
-                            <p>Fill out the form below to apply for scholarships.</p>
+                            <h3>Apply for Counselling</h3>
+                            <p>Fill out the form below to get free expert counselling and admission guidance.</p>
 
                             <div className="form-group">
                                 <input 
@@ -218,15 +220,32 @@ const Hero = () => {
                                     required
                                 >
                                     <option value="">Select Course</option>
-                                    <option value="medical">Medical</option>
-                                    <option value="engineering">Engineering</option>
-                                    <option value="management">Management</option>
-                                    <option value="law">Law</option>
-                                    <option value="other">Other</option>
+                                    <option value="B.Tech / BE">B.Tech / BE</option>
+                                    <option value="MBA / PGDM">MBA / PGDM</option>
+                                    <option value="BBA / BCA">BBA / BCA</option>
+                                    <option value="B.Pharm / M.Pharm">B.Pharm / M.Pharm</option>
+                                    <option value="LLB / BA LLB">LLB / BA LLB</option>
+                                    <option value="B.Ed / M.Ed">B.Ed / M.Ed</option>
+                                    <option value="MBBS / BDS">MBBS / BDS</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <select 
+                                    value={qualification}
+                                    onChange={(e) => setQualification(e.target.value)}
+                                    required
+                                >
+                                    <option value="">Current Qualification</option>
+                                    <option value="12th (Science)">12th (Science)</option>
+                                    <option value="12th (Commerce)">12th (Commerce)</option>
+                                    <option value="12th (Arts)">12th (Arts)</option>
+                                    <option value="Graduation">Graduation</option>
+                                    <option value="Post Graduation">Post Graduation</option>
                                 </select>
                             </div>
                             <button type="submit" className="btn btn-accent btn-block" disabled={loading}>
-                                {loading ? <span className="btn-spinner"></span> : 'Submit'}
+                                {loading ? <span className="btn-spinner"></span> : 'Get Free Counselling →'}
                             </button>
                         </form>
                     )}

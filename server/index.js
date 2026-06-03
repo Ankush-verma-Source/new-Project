@@ -71,10 +71,10 @@ const protect = async (req, res, next) => {
 // Submit scholarship application with robust validation
 app.post('/api/submissions/apply', async (req, res) => {
   try {
-    const { name, email, phone, course } = req.body;
+    const { name, email, phone, course, qualification } = req.body;
     
     // 1. Basic empty checks
-    if (!name || !email || !phone || !course) {
+    if (!name || !email || !phone || !course || !qualification) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
 
@@ -101,7 +101,8 @@ app.post('/api/submissions/apply', async (req, res) => {
       name: cleanName, 
       email: cleanEmail, 
       phone: cleanPhone, 
-      course 
+      course,
+      qualification: qualification.trim()
     });
     await application.save();
 

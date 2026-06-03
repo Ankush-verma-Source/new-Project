@@ -39,8 +39,8 @@ const Scholarships = () => {
         <div className="scholarships-page">
             <section className="scholarships-hero">
                 <div className="container">
-                    <h1 data-aos="fade-up">Scholarship Programs</h1>
-                    <p data-aos="fade-up" data-aos-delay="100">Investing in the bright minds of tomorrow.</p>
+                    <h1 data-aos="fade-up">Counselling &amp; Scholarship Guidance</h1>
+                    <p data-aos="fade-up" data-aos-delay="100">Guiding you to the best academic opportunities and scholarships.</p>
                 </div>
             </section>
 
@@ -48,8 +48,8 @@ const Scholarships = () => {
                 <div className="container">
                     <div className="section-header" data-aos="fade-up">
                         <div className="pill-tag">Opportunities</div>
-                        <h2>Our Scholarship Categories</h2>
-                        <p>We offer a variety of programs tailored to different needs and achievements.</p>
+                        <h2>Guidance &amp; Scholarship Categories</h2>
+                        <p>We assist you in securing programs tailored to your academic profile and financial needs.</p>
                     </div>
 
                     <div className="scholarships-grid">
@@ -96,8 +96,8 @@ const Scholarships = () => {
                             <div className="step-item">
                                 <div className="step-num">3</div>
                                 <div>
-                                    <h4>Approval</h4>
-                                    <p>Once approved, you will receive your scholarship letter and admission guidance.</p>
+                                    <h4>Admission &amp; Scholarship</h4>
+                                    <p>Once selected, we will assist you in securing your admission and scholarship letter from the partner college.</p>
                                 </div>
                             </div>
                         </div>

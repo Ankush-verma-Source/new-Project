@@ -4,6 +4,24 @@ import { FaGraduationCap, FaEnvelope, FaSearch, FaSignOutAlt, FaTrashAlt, FaDown
 import './AdminDashboard.css';
 import { API_BASE_URL } from '../config';
 
+const getPillClass = (course) => {
+  if (!course) return 'pill-other';
+  const c = course.toLowerCase().trim();
+  if (c.includes('b.tech') || c.includes('be') || c.includes('bca') || c.includes('bba')) {
+    return 'pill-engineering';
+  }
+  if (c.includes('mba') || c.includes('pgdm')) {
+    return 'pill-management';
+  }
+  if (c.includes('pharm') || c.includes('bds') || c.includes('mbbs')) {
+    return 'pill-medical';
+  }
+  if (c.includes('llb') || c.includes('law')) {
+    return 'pill-law';
+  }
+  return 'pill-other';
+};
+
 const AdminDashboard = () => {
   const [applications, setApplications] = useState([]);
   const [enquiries, setEnquiries] = useState([]);
@@ -207,12 +225,13 @@ const AdminDashboard = () => {
     let rows = [];
 
     if (activeTab === 'applications') {
-      headers = ['Name', 'Email', 'Phone', 'Course Chosen', 'Submitted Date'];
+      headers = ['Name', 'Email', 'Phone', 'Course Chosen', 'Qualification', 'Submitted Date'];
       rows = list.map(item => [
         item.name,
         item.email,
         item.phone,
         item.course,
+        item.qualification || 'N/A',
         new Date(item.createdAt).toLocaleString()
       ]);
     } else {
@@ -347,11 +366,14 @@ const AdminDashboard = () => {
                 <FaFilter className="filter-icon" />
                 <select value={courseFilter} onChange={(e) => setCourseFilter(e.target.value)}>
                   <option value="">All Courses</option>
-                  <option value="medical">Medical</option>
-                  <option value="engineering">Engineering</option>
-                  <option value="management">Management</option>
-                  <option value="law">Law</option>
-                  <option value="other">Other</option>
+                  <option value="B.Tech / BE">B.Tech / BE</option>
+                  <option value="MBA / PGDM">MBA / PGDM</option>
+                  <option value="BBA / BCA">BBA / BCA</option>
+                  <option value="B.Pharm / M.Pharm">B.Pharm / M.Pharm</option>
+                  <option value="LLB / BA LLB">LLB / BA LLB</option>
+                  <option value="B.Ed / M.Ed">B.Ed / M.Ed</option>
+                  <option value="MBBS / BDS">MBBS / BDS</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
             )}
@@ -393,6 +415,7 @@ const AdminDashboard = () => {
                     <th>Email Address</th>
                     <th>Phone Number</th>
                     <th>Course Chosen</th>
+                    <th>Qualification</th>
                     <th>Submission Date</th>
                     <th style={{ textAlign: 'center' }}>Actions</th>
                   </tr>
@@ -408,10 +431,11 @@ const AdminDashboard = () => {
                         <a href={`tel:${item.phone}`} className="table-tel-link">{item.phone}</a>
                       </td>
                       <td>
-                        <span className={`course-pill pill-${item.course}`}>
-                          {item.course.charAt(0).toUpperCase() + item.course.slice(1)}
+                        <span className={`course-pill ${getPillClass(item.course)}`}>
+                          {item.course}
                         </span>
                       </td>
+                      <td>{item.qualification || 'N/A'}</td>
                       <td className="table-date">
                         <FaClock style={{ marginRight: '5px', fontSize: '12px' }} />
                         {new Date(item.createdAt).toLocaleDateString()} {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
