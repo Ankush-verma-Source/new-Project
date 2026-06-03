@@ -295,7 +295,7 @@ const Home = () => {
                         "@type": "EducationalOrganization",
                         "name": "Global Education Guide",
                         "url": "https://www.globaleducationguide.in",
-                        "logo": "https://www.globaleducationguide.in/logo.png"
+                        "logo": "https://www.globaleducationguide.in/logo-square.png"
                     })}
                 </script>
             </Helmet>
