@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './Impact.css';
@@ -10,13 +11,27 @@ const Impact = () => {
 
     const impactStats = [
         { number: "25,334+", label: "Students Empowered", icon: "👨‍🎓" },
-        { number: "1,500+", label: "Scholarships Awarded", icon: "📜" },
+        { number: "1,500+", label: "Scholarships Facilitated", icon: "📜" },
         { number: "50+", label: "Partner Universities", icon: "🏛️" },
         { number: "10+", label: "Countries Reached", icon: "🌍" }
     ];
 
     return (
         <div className="impact-page">
+            <Helmet>
+                <title>Our Impact | Global Education Guide</title>
+                <meta name="description" content="Discover the impact of Global Education Guide with 25,334+ students guided and 1,500+ successful admissions and scholarships." />
+                <link rel="canonical" href="https://www.globaleducationguide.in/impact" />
+                <meta property="og:title" content="Our Impact | Global Education Guide" />
+                <meta property="og:description" content="Discover the impact of Global Education Guide with 25,334+ students guided and 1,500+ successful admissions and scholarships." />
+                <meta property="og:url" content="https://www.globaleducationguide.in/impact" />
+                <meta property="og:image" content="https://www.globaleducationguide.in/logo.png" />
+                <meta property="og:type" content="website" />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content="Our Impact | Global Education Guide" />
+                <meta property="twitter:description" content="Discover the impact of Global Education Guide with 25,334+ students guided and 1,500+ successful admissions and scholarships." />
+                <meta property="twitter:image" content="https://www.globaleducationguide.in/logo.png" />
+            </Helmet>
             <section className="impact-hero">
                 <div className="container">
                     <h1 data-aos="fade-up">Our Impact</h1>

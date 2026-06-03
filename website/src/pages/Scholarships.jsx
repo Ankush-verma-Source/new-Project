@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './Scholarships.css';
@@ -37,6 +38,20 @@ const Scholarships = () => {
 
     return (
         <div className="scholarships-page">
+            <Helmet>
+                <title>Scholarships & Counselling | Global Education Guide</title>
+                <meta name="description" content="Explore scholarship opportunities, educational counselling, and study abroad packages offered by Global Education Guide." />
+                <link rel="canonical" href="https://www.globaleducationguide.in/scholarships" />
+                <meta property="og:title" content="Scholarships & Counselling | Global Education Guide" />
+                <meta property="og:description" content="Explore scholarship opportunities, educational counselling, and study abroad packages offered by Global Education Guide." />
+                <meta property="og:url" content="https://www.globaleducationguide.in/scholarships" />
+                <meta property="og:image" content="https://www.globaleducationguide.in/logo.png" />
+                <meta property="og:type" content="website" />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content="Scholarships & Counselling | Global Education Guide" />
+                <meta property="twitter:description" content="Explore scholarship opportunities, educational counselling, and study abroad packages offered by Global Education Guide." />
+                <meta property="twitter:image" content="https://www.globaleducationguide.in/logo.png" />
+            </Helmet>
             <section className="scholarships-hero">
                 <div className="container">
                     <h1 data-aos="fade-up">Counselling &amp; Scholarship Guidance</h1>
@@ -82,21 +97,21 @@ const Scholarships = () => {
                             <div className="step-item">
                                 <div className="step-num">1</div>
                                 <div>
-                                    <h4>Apply Online</h4>
+                                    <h3>Apply Online</h3>
                                     <p>Fill out the application form with your academic and personal details.</p>
                                 </div>
                             </div>
                             <div className="step-item">
                                 <div className="step-num">2</div>
                                 <div>
-                                    <h4>Document Review</h4>
+                                    <h3>Document Review</h3>
                                     <p>Our team will verify your documents and assess your eligibility.</p>
                                 </div>
                             </div>
                             <div className="step-item">
                                 <div className="step-num">3</div>
                                 <div>
-                                    <h4>Admission &amp; Scholarship</h4>
+                                    <h3>Admission &amp; Scholarship</h3>
                                     <p>Once selected, we will assist you in securing your admission and scholarship letter from the partner college.</p>
                                 </div>
                             </div>

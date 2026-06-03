@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { FaGraduationCap, FaEnvelope, FaSearch, FaSignOutAlt, FaTrashAlt, FaDownload, FaFilter, FaClock, FaSync } from 'react-icons/fa';
 import './AdminDashboard.css';
 import { API_BASE_URL } from '../config';
@@ -282,6 +283,10 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard-container">
+      <Helmet>
+        <title>Admin Dashboard | Global Education Guide</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       {/* Dashboard Header Bar */}
       <header className="dashboard-header">
         <div className="dashboard-title-area">

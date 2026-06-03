@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './AdminLogin.css';
 import { API_BASE_URL } from '../config';
@@ -53,6 +54,10 @@ const AdminLogin = () => {
 
   return (
     <div className="admin-login-container">
+      <Helmet>
+        <title>Admin Login | Global Education Guide</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <div className="login-card">
         <div className="login-header">
           <div className="lock-icon-container">

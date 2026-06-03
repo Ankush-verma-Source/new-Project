@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -145,6 +146,20 @@ const Contact = () => {
 
     return (
         <div className="contact-page">
+            <Helmet>
+                <title>Contact Us | Global Education Guide</title>
+                <meta name="description" content="Contact Global Education Guide for study abroad counselling, admissions support and scholarship guidance." />
+                <link rel="canonical" href="https://www.globaleducationguide.in/contact" />
+                <meta property="og:title" content="Contact Us | Global Education Guide" />
+                <meta property="og:description" content="Contact Global Education Guide for study abroad counselling, admissions support and scholarship guidance." />
+                <meta property="og:url" content="https://www.globaleducationguide.in/contact" />
+                <meta property="og:image" content="https://www.globaleducationguide.in/logo.png" />
+                <meta property="og:type" content="website" />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content="Contact Us | Global Education Guide" />
+                <meta property="twitter:description" content="Contact Global Education Guide for study abroad counselling, admissions support and scholarship guidance." />
+                <meta property="twitter:image" content="https://www.globaleducationguide.in/logo.png" />
+            </Helmet>
             <section className="contact-hero">
                 <div className="container">
                     <h1 data-aos="fade-up">Contact Us</h1>

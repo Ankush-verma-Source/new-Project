@@ -1,11 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { FaHome, FaExclamationTriangle } from 'react-icons/fa';
 import './NotFound.css';
 
 const NotFound = () => {
   return (
     <div className="not-found-container">
+      <Helmet>
+        <title>Page Not Found | Global Education Guide</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <div className="not-found-card">
         <div className="not-found-icon-wrapper">
           <FaExclamationTriangle className="not-found-icon" />

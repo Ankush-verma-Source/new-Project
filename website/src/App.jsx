@@ -1,19 +1,43 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
 import TopBar from './components/TopBar';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import About from './pages/About';
-import Scholarships from './pages/Scholarships';
-import Impact from './pages/Impact';
-import Contact from './pages/Contact';
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import NotFound from './pages/NotFound';
 import './index.css';
+
+// Dynamically import pages for code splitting
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Scholarships = lazy(() => import('./pages/Scholarships'));
+const Impact = lazy(() => import('./pages/Impact'));
+const Contact = lazy(() => import('./pages/Contact'));
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+// A sleek fallback loading element
+const PageLoader = () => (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '60vh',
+    flexDirection: 'column',
+    color: '#002147'
+  }}>
+    <div className="btn-spinner" style={{
+      width: '40px',
+      height: '40px',
+      borderWidth: '3px',
+      borderColor: '#002147',
+      borderTopColor: 'transparent',
+      marginBottom: '15px'
+    }}></div>
+    <p style={{ fontWeight: 600 }}>Loading page...</p>
+  </div>
+);
 
 function App() {
   return (
@@ -22,23 +46,25 @@ function App() {
         <TopBar />
         <Header />
         <main style={{ flex: 1 }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/scholarships" element={<Scholarships />} />
-            <Route path="/impact" element={<Impact />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route 
-              path="/admin" 
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/scholarships" element={<Scholarships />} />
+              <Route path="/impact" element={<Impact />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </main>
         <Footer />
         {/* Floating WhatsApp Widget */}

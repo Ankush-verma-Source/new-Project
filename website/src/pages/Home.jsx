@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { FaGraduationCap, FaUserTie, FaChalkboardTeacher, FaUniversity, FaHandHoldingHeart, FaGlobeAsia, FaClock, FaSearch, FaRobot, FaMagic, FaMedal } from 'react-icons/fa';
 import foundationImg from '../assets/foundation-img.png';
 import immigrationImg from '../assets/immigration-img.png';
@@ -275,6 +276,29 @@ const Home = () => {
 
     return (
         <div className="home">
+            <Helmet>
+                <title>Global Education Guide | Study Abroad Consultants</title>
+                <meta name="description" content="Global Education Guide provides study abroad counselling, university admissions support, scholarships guidance and visa assistance." />
+                <link rel="canonical" href="https://www.globaleducationguide.in/" />
+                <meta property="og:title" content="Global Education Guide | Study Abroad Consultants" />
+                <meta property="og:description" content="Global Education Guide provides study abroad counselling, university admissions support, scholarships guidance and visa assistance." />
+                <meta property="og:url" content="https://www.globaleducationguide.in/" />
+                <meta property="og:image" content="https://www.globaleducationguide.in/logo.png" />
+                <meta property="og:type" content="website" />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content="Global Education Guide | Study Abroad Consultants" />
+                <meta property="twitter:description" content="Global Education Guide provides study abroad counselling, university admissions support, scholarships guidance and visa assistance." />
+                <meta property="twitter:image" content="https://www.globaleducationguide.in/logo.png" />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "EducationalOrganization",
+                        "name": "Global Education Guide",
+                        "url": "https://www.globaleducationguide.in",
+                        "logo": "https://www.globaleducationguide.in/logo.png"
+                    })}
+                </script>
+            </Helmet>
             <Hero />
 
             {/* Stats Bar */}
@@ -476,7 +500,7 @@ const Home = () => {
                 <div className="container">
                     <div className="foundation-content">
                         <div className="foundation-image-wrapper" data-aos="fade-right">
-                            <img src={foundationImg} alt="Students Celebrating" className="foundation-image" />
+                            <img src={foundationImg} alt="Students Celebrating" className="foundation-image" loading="lazy" />
 
                             {/* Overlay Performance Card */}
                             <div className="performance-card">
@@ -564,7 +588,7 @@ const Home = () => {
                 <div className="container">
                     <div className="foundation-content">
                         <div className="foundation-image-wrapper" data-aos="fade-right">
-                            <img src={immigrationImg} alt="Immigration Assistance" className="foundation-image" />
+                            <img src={immigrationImg} alt="Immigration Assistance" className="foundation-image" loading="lazy" />
                         </div>
                         <div className="foundation-text" data-aos="fade-left">
                             <div className="pill-tag">★ International Institutes You Dream</div>
@@ -597,7 +621,7 @@ const Home = () => {
                         </p>
                         {/* Logo Grid */}
                         <div className="institutes-grid" style={{ marginTop: '3rem', textAlign: 'center' }}>
-                            <img src={universityLogos} alt="Partner Universities" style={{ maxWidth: '100%', borderRadius: '15px', boxShadow: 'var(--shadow-md)' }} />
+                            <img src={universityLogos} alt="Partner Universities" loading="lazy" style={{ maxWidth: '100%', borderRadius: '15px', boxShadow: 'var(--shadow-md)' }} />
                         </div>
                     </div>
                 </div>

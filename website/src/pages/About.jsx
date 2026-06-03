@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import foundationImg from '../assets/foundation-img.png';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -11,18 +12,32 @@ const About = () => {
 
     return (
         <div className="about-page">
+            <Helmet>
+                <title>About Us | Global Education Guide</title>
+                <meta name="description" content="Learn about Global Education Guide and our mission to help students achieve international education goals." />
+                <link rel="canonical" href="https://www.globaleducationguide.in/about" />
+                <meta property="og:title" content="About Us | Global Education Guide" />
+                <meta property="og:description" content="Learn about Global Education Guide and our mission to help students achieve international education goals." />
+                <meta property="og:url" content="https://www.globaleducationguide.in/about" />
+                <meta property="og:image" content="https://www.globaleducationguide.in/logo.png" />
+                <meta property="og:type" content="website" />
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:title" content="About Us | Global Education Guide" />
+                <meta property="twitter:description" content="Learn about Global Education Guide and our mission to help students achieve international education goals." />
+                <meta property="twitter:image" content="https://www.globaleducationguide.in/logo.png" />
+            </Helmet>
             <section className="about-hero">
                 <div className="container">
                     <h1 data-aos="fade-up">About Global Education Guide Foundation</h1>
                     <p data-aos="fade-up" data-aos-delay="100">Empowering the next generation of leaders through accessible education.</p>
                 </div>
             </section>
-
+ 
             <section className="section">
                 <div className="container">
                     <div className="about-grid">
                         <div className="about-image" data-aos="fade-right">
-                            <img src={foundationImg} alt="About Us" />
+                            <img src={foundationImg} alt="About Us" loading="lazy" />
                         </div>
                         <div className="about-text" data-aos="fade-left">
                             <div className="pill-tag">Our Story</div>
