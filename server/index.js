@@ -6,6 +6,7 @@ import connectDB from './db.js';
 import Admin from './models/Admin.js';
 import Application from './models/Application.js';
 import Enquiry from './models/Enquiry.js';
+import Review from './models/Review.js';
 
 dotenv.config();
 
@@ -20,8 +21,84 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors());
+// Set basic security HTTP headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.removeHeader('X-Powered-By');
+  next();
+});
+
+// Configure dynamic CORS origins
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+  : [];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      process.env.NODE_ENV !== 'production' ||
+      allowedOrigins.includes(origin) ||
+      allowedOrigins.includes('*') ||
+      ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'].includes(origin)
+    ) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
+
 app.use(express.json());
+
+// In-Memory Rate Limiting Middleware
+const ipRequestMap = new Map();
+const rateLimitWindowMs = 15 * 60 * 1000; // 15 minutes
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, data] of ipRequestMap.entries()) {
+    if (now > data.resetTime) {
+      ipRequestMap.delete(ip);
+    }
+  }
+}, 5 * 60 * 1000); // Cleanup every 5 minutes
+
+const limitRate = (maxRequests, windowMs) => {
+  return (req, res, next) => {
+    const ip = req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    const now = Date.now();
+
+    if (!ipRequestMap.has(ip)) {
+      ipRequestMap.set(ip, {
+        count: 1,
+        resetTime: now + windowMs
+      });
+      return next();
+    }
+
+    const limitData = ipRequestMap.get(ip);
+    if (now > limitData.resetTime) {
+      limitData.count = 1;
+      limitData.resetTime = now + windowMs;
+      return next();
+    }
+
+    limitData.count++;
+    if (limitData.count > maxRequests) {
+      return res.status(429).json({
+        message: 'Too many requests from this IP. Please try again after 15 minutes.'
+      });
+    }
+    next();
+  };
+};
+
+const submissionRateLimiter = limitRate(15, rateLimitWindowMs);
+
 
 // Seed default Admin if not exists
 const seedAdmin = async () => {
@@ -68,8 +145,90 @@ const protect = async (req, res, next) => {
 
 // --- PUBLIC ROUTES ---
 
+// Submit student review with validation
+app.post('/api/submissions/review', submissionRateLimiter, async (req, res) => {
+  try {
+    const { name, rating, text, course } = req.body;
+
+    if (!name || rating === undefined || !text || !course) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    const cleanName = name.trim();
+    const cleanText = text.trim();
+    const cleanCourse = course.trim();
+    const numericRating = Number(rating);
+
+    // 1. Name validation
+    if (!/^[a-zA-Z\s]{2,50}$/.test(cleanName)) {
+      return res.status(400).json({ message: 'Name must contain only letters and spaces, and be between 2 and 50 characters.' });
+    }
+
+    // 2. Course validation
+    if (cleanCourse.length < 2 || cleanCourse.length > 100) {
+      return res.status(400).json({ message: 'Course/Designation must be between 2 and 100 characters.' });
+    }
+
+    // 3. Rating validation
+    if (isNaN(numericRating) || numericRating < 1 || numericRating > 5) {
+      return res.status(400).json({ message: 'Rating must be an integer between 1 and 5.' });
+    }
+
+    // 4. Text validation
+    if (cleanText.length < 5 || cleanText.length > 1000) {
+      return res.status(400).json({ message: 'Review text must be between 5 and 1000 characters.' });
+    }
+
+    const review = new Review({
+      name: cleanName,
+      rating: numericRating,
+      text: cleanText,
+      course: cleanCourse,
+      approved: false // requires admin approval
+    });
+    await review.save();
+
+    res.status(201).json({ success: true, message: 'Review submitted successfully. It will be visible on the website after admin approval.', data: review });
+  } catch (error) {
+    console.error(`Review submission error: ${error.message}`);
+    res.status(500).json({ message: 'Internal server error while saving review' });
+  }
+});
+
+// Get approved reviews for public website with pagination
+app.get('/api/reviews', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const skip = (page - 1) * limit;
+
+    const totalReviews = await Review.countDocuments({ approved: true });
+    const totalPages = Math.ceil(totalReviews / limit);
+
+    const reviews = await Review.find({ approved: true })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({ 
+      success: true, 
+      count: reviews.length, 
+      pagination: {
+        totalReviews,
+        totalPages,
+        currentPage: page,
+        limit
+      },
+      data: reviews 
+    });
+  } catch (error) {
+    console.error(`Error fetching reviews: ${error.message}`);
+    res.status(500).json({ message: 'Server error fetching reviews' });
+  }
+});
+
 // Submit scholarship application with robust validation
-app.post('/api/submissions/apply', async (req, res) => {
+app.post('/api/submissions/apply', submissionRateLimiter, async (req, res) => {
   try {
     const { name, email, phone, course, qualification } = req.body;
     
@@ -116,7 +275,7 @@ app.post('/api/submissions/apply', async (req, res) => {
 });
 
 // Submit contact message with robust validation
-app.post('/api/submissions/contact', async (req, res) => {
+app.post('/api/submissions/contact', submissionRateLimiter, async (req, res) => {
   try {
     const { name, email, phone, message } = req.body;
 
@@ -175,6 +334,11 @@ app.post('/api/admin/login', async (req, res) => {
       return res.status(400).json({ message: 'Please provide both username and password' });
     }
 
+    // Defensive check to block NoSQL query injection payloads
+    if (typeof username !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ message: 'Invalid credentials format' });
+    }
+
     const admin = await Admin.findOne({ username });
     if (admin && (await admin.matchPassword(password))) {
       const token = jwt.sign(
@@ -201,6 +365,48 @@ app.post('/api/admin/login', async (req, res) => {
 });
 
 // --- PROTECTED ADMIN ROUTES ---
+
+// Get all student reviews (for administration)
+app.get('/api/admin/reviews', protect, async (req, res) => {
+  try {
+    const reviews = await Review.find({}).sort({ createdAt: -1 });
+    res.json({ success: true, count: reviews.length, data: reviews });
+  } catch (error) {
+    console.error(`Error fetching admin reviews: ${error.message}`);
+    res.status(500).json({ message: 'Server error fetching reviews list' });
+  }
+});
+
+// Approve a student review
+app.put('/api/admin/reviews/:id/approve', protect, async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) {
+      return res.status(404).json({ message: 'Review record not found' });
+    }
+    review.approved = true;
+    await review.save();
+    res.json({ success: true, message: 'Review approved successfully', data: review });
+  } catch (error) {
+    console.error(`Error approving review: ${error.message}`);
+    res.status(500).json({ message: 'Server error approving review' });
+  }
+});
+
+// Delete a student review
+app.delete('/api/admin/reviews/:id', protect, async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) {
+      return res.status(404).json({ message: 'Review record not found' });
+    }
+    await review.deleteOne();
+    res.json({ success: true, message: 'Review record deleted successfully' });
+  } catch (error) {
+    console.error(`Error deleting review: ${error.message}`);
+    res.status(500).json({ message: 'Server error deleting review record' });
+  }
+});
 
 // Get all scholarship applications
 app.get('/api/admin/applications', protect, async (req, res) => {
@@ -257,6 +463,14 @@ app.delete('/api/admin/enquiries/:id', protect, async (req, res) => {
 // Fallback Route
 app.get('/', (req, res) => {
   res.send('Global Education Guide Backend Server is running...');
+});
+
+// Global unhandled error handling middleware
+app.use((err, req, res, next) => {
+  console.error(`Unhandled error: ${err.message}`, err.stack);
+  res.status(500).json({
+    message: 'An internal server error occurred. Please try again later.'
+  });
 });
 
 const PORT = process.env.PORT || 5000;

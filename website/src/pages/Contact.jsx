@@ -293,13 +293,17 @@ const Contact = () => {
             <section className="map-section">
                 <div className="container">
                     <div className="map-container" data-aos="zoom-in">
-                        {/* Placeholder for Google Map */}
-                        <div className="map-placeholder-box" style={{ width: '100%', height: '450px', background: '#f1f5f9', border: '2px dashed #cbd5e1', borderRadius: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#64748b', textAlign: 'center', padding: '20px' }}>
-                            <div style={{ fontSize: '3rem', marginBottom: '15px' }}>📍</div>
-                            <h3 style={{ color: '#002147', marginBottom: '8px', fontWeight: '700', fontSize: '20px' }}>Google Map Navigation</h3>
-                            <p style={{ fontSize: '14px', margin: '0 0 6px 0', color: '#475569' }}>Jammu Office: Gandhi Nagar, Jammu, J&K, India</p>
-                            <span style={{ fontSize: '12px', background: '#e0f2fe', color: '#0369a1', padding: '4px 12px', borderRadius: '9999px', fontWeight: '600', marginTop: '10px' }}>Interactive Map Feature Coming Soon</span>
-                        </div>
+                        {/* Real interactive Google Map for Jammu Office */}
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3356.5516070380846!2d74.86815347631326!3d32.71128367369325!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391e84860492dbad%3A0xe5a14d59a721727c!2sGol%20Market%2C%20Gandhi%20Nagar%2C%20Jammu%2C%20Jammu%20and%20Kashmir%20180004!5e0!3m2!1sen!2sin!4v1717600000000!5m2!1sen!2sin" 
+                            width="100%" 
+                            height="450" 
+                            style={{ border: 0, borderRadius: '20px', boxShadow: 'var(--shadow-md)', display: 'block' }} 
+                            allowFullScreen="" 
+                            loading="lazy" 
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title="Google Map Location of Global Education Guide Office"
+                        ></iframe>
                     </div>
                 </div>
             </section>

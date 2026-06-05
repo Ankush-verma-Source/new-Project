@@ -23,5 +23,8 @@ const EnquirySchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+// Optimize sorted admin queries
+EnquirySchema.index({ createdAt: -1 });
+
 const Enquiry = mongoose.model('Enquiry', EnquirySchema);
 export default Enquiry;

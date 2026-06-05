@@ -28,5 +28,8 @@ const ApplicationSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+// Optimize sorted admin queries
+ApplicationSchema.index({ createdAt: -1 });
+
 const Application = mongoose.model('Application', ApplicationSchema);
 export default Application;

@@ -26,7 +26,8 @@ const getPillClass = (course) => {
 const AdminDashboard = () => {
   const [applications, setApplications] = useState([]);
   const [enquiries, setEnquiries] = useState([]);
-  const [activeTab, setActiveTab] = useState('applications'); // 'applications' or 'enquiries'
+  const [reviews, setReviews] = useState([]);
+  const [activeTab, setActiveTab] = useState('applications'); // 'applications', 'enquiries' or 'reviews'
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
@@ -45,6 +46,7 @@ const AdminDashboard = () => {
 
   const prevAppsCount = useRef(0);
   const prevEnqsCount = useRef(0);
+  const prevRevsCount = useRef(0);
   const isInitialFetch = useRef(true);
 
   const navigate = useNavigate();
@@ -75,25 +77,20 @@ const AdminDashboard = () => {
     setError('');
 
     try {
-      const appResponse = await fetch(`${API_BASE_URL}/api/admin/applications`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      const enqResponse = await fetch(`${API_BASE_URL}/api/admin/enquiries`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const [appResponse, enqResponse, revResponse] = await Promise.all([
+        fetch(`${API_BASE_URL}/api/admin/applications`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_BASE_URL}/api/admin/enquiries`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_BASE_URL}/api/admin/reviews`, { headers: { 'Authorization': `Bearer ${token}` } })
+      ]);
 
-      if (appResponse.status === 401 || enqResponse.status === 401) {
+      if (appResponse.status === 401 || enqResponse.status === 401 || revResponse.status === 401) {
         handleLogout();
         return;
       }
 
       const appData = await appResponse.json();
       const enqData = await enqResponse.json();
+      const revData = await revResponse.json();
 
       if (appData.success) {
         const newApps = appData.data;
@@ -112,6 +109,15 @@ const AdminDashboard = () => {
         }
         setEnquiries(newEnqs);
         prevEnqsCount.current = newEnqs.length;
+      }
+      if (revData.success) {
+        const newRevs = revData.data;
+        if (!isInitialFetch.current && newRevs.length > prevRevsCount.current) {
+          const diff = newRevs.length - prevRevsCount.current;
+          triggerNotification(`${diff} new student review${diff > 1 ? 's' : ''} received!`, 'reviews');
+        }
+        setReviews(newRevs);
+        prevRevsCount.current = newRevs.length;
       }
 
       setLastSyncedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
@@ -202,6 +208,8 @@ const AdminDashboard = () => {
       if (response.ok && data.success) {
         if (type === 'applications') {
           setApplications(applications.filter(item => item._id !== id));
+        } else if (type === 'reviews') {
+          setReviews(reviews.filter(item => item._id !== id));
         } else {
           setEnquiries(enquiries.filter(item => item._id !== id));
         }
@@ -217,9 +225,40 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleApprove = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/reviews/${id}/approve`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 401) {
+        handleLogout();
+        return;
+      }
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setReviews(reviews.map(item => item._id === id ? { ...item, approved: true } : item));
+      } else {
+        alert(data.message || 'Failed to approve review.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('A network error occurred while trying to approve.');
+    }
+  };
+
   // Export List to CSV File
   const handleExportCSV = () => {
-    const list = activeTab === 'applications' ? filteredApplications : filteredEnquiries;
+    const list = 
+      activeTab === 'applications' ? filteredApplications : 
+      activeTab === 'reviews' ? filteredReviews : 
+      filteredEnquiries;
+      
     if (!list || list.length === 0) return;
 
     let headers = [];
@@ -233,6 +272,16 @@ const AdminDashboard = () => {
         item.phone,
         item.course,
         item.qualification || 'N/A',
+        new Date(item.createdAt).toLocaleString()
+      ]);
+    } else if (activeTab === 'reviews') {
+      headers = ['Name', 'Course/College', 'Rating', 'Review Text', 'Approved', 'Submitted Date'];
+      rows = list.map(item => [
+        item.name,
+        item.course,
+        item.rating,
+        item.text,
+        item.approved ? 'Yes' : 'No',
         new Date(item.createdAt).toLocaleString()
       ]);
     } else {
@@ -278,6 +327,14 @@ const AdminDashboard = () => {
       item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.phone.includes(searchTerm) ||
       item.message.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
+
+  const filteredReviews = reviews.filter(item => {
+    return (
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      item.course.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.text.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
 
@@ -334,6 +391,15 @@ const AdminDashboard = () => {
             <p className="stat-number">{enquiries.length}</p>
           </div>
         </div>
+        <div className="stat-card" onClick={() => { setActiveTab('reviews'); setSearchTerm(''); setCourseFilter(''); }}>
+          <div className="stat-icon-wrapper rev-icon">
+            <span style={{ fontSize: '20px' }}>★</span>
+          </div>
+          <div className="stat-details">
+            <h3>Student Reviews</h3>
+            <p className="stat-number">{reviews.length}</p>
+          </div>
+        </div>
       </section>
 
       {/* Data Views & Table Section */}
@@ -352,6 +418,12 @@ const AdminDashboard = () => {
           >
             <FaEnvelope /> Contact Us Submissions
           </button>
+          <button 
+            className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('reviews'); setSearchTerm(''); setCourseFilter(''); }}
+          >
+            <span style={{ marginRight: '6px', fontSize: '15px' }}>★</span> Student Reviews
+          </button>
         </div>
 
         {/* Dashboard Operations Toolbar (Search, Filter, Export) */}
@@ -361,7 +433,11 @@ const AdminDashboard = () => {
               <FaSearch className="search-icon" />
               <input 
                 type="text" 
-                placeholder={activeTab === 'applications' ? "Search by Name, Email, Phone..." : "Search by Name, Email, Message..."} 
+                placeholder={
+                  activeTab === 'applications' ? "Search by Name, Email, Phone..." : 
+                  activeTab === 'reviews' ? "Search by Name, Course, Comment..." :
+                  "Search by Name, Email, Message..."
+                } 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -387,7 +463,7 @@ const AdminDashboard = () => {
             <button 
               className="export-btn" 
               onClick={handleExportCSV}
-              disabled={(activeTab === 'applications' ? filteredApplications.length : filteredEnquiries.length) === 0}
+              disabled={(activeTab === 'applications' ? filteredApplications.length : activeTab === 'reviews' ? filteredReviews.length : filteredEnquiries.length) === 0}
             >
               <FaDownload /> Export to CSV
             </button>
@@ -450,6 +526,72 @@ const AdminDashboard = () => {
                           className="action-delete-btn" 
                           onClick={() => openDeleteModal(item._id, 'applications')}
                           title="Delete application"
+                        >
+                          <FaTrashAlt />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        ) : activeTab === 'reviews' ? (
+          /* Reviews List View */
+          <div className="table-responsive">
+            {filteredReviews.length === 0 ? (
+              <div className="empty-table-state">
+                <p>No student reviews found.</p>
+              </div>
+            ) : (
+              <table className="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Reviewer Name</th>
+                    <th>Course / College</th>
+                    <th>Rating</th>
+                    <th>Review Text</th>
+                    <th style={{ textAlign: 'center' }}>Status</th>
+                    <th>Submission Date</th>
+                    <th style={{ textAlign: 'center' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredReviews.map((item) => (
+                    <tr key={item._id}>
+                      <td className="font-semibold">{item.name}</td>
+                      <td>{item.course}</td>
+                      <td>
+                        <span className="review-stars-admin" title={`${item.rating} Stars`}>
+                          {'★'.repeat(item.rating)}{'☆'.repeat(5 - item.rating)}
+                        </span>
+                      </td>
+                      <td className="table-message-cell">
+                        <div className="message-text-bubble">{item.text}</div>
+                      </td>
+                      <td style={{ textAlign: 'center' }}>
+                        <span className={`status-badge ${item.approved ? 'approved' : 'pending'}`}>
+                          {item.approved ? 'Approved' : 'Pending'}
+                        </span>
+                      </td>
+                      <td className="table-date" style={{ whiteSpace: 'nowrap' }}>
+                        <FaClock style={{ marginRight: '5px', fontSize: '12px' }} />
+                        {new Date(item.createdAt).toLocaleDateString()} {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </td>
+                      <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
+                        {!item.approved && (
+                          <button 
+                            className="action-approve-btn"
+                            onClick={() => handleApprove(item._id)}
+                            title="Approve review"
+                          >
+                            ✓
+                          </button>
+                        )}
+                        <button 
+                          className="action-delete-btn" 
+                          onClick={() => openDeleteModal(item._id, 'reviews')}
+                          title="Delete review"
                         >
                           <FaTrashAlt />
                         </button>
@@ -536,7 +678,7 @@ const AdminDashboard = () => {
       {newAlert && (
         <div className={`realtime-toast ${newAlert.type}`} onClick={() => { setActiveTab(newAlert.type); setNewAlert(null); }}>
           <div className="toast-icon">
-            {newAlert.type === 'applications' ? <FaGraduationCap /> : <FaEnvelope />}
+            {newAlert.type === 'applications' ? <FaGraduationCap /> : newAlert.type === 'reviews' ? <span style={{ fontSize: '15px' }}>★</span> : <FaEnvelope />}
           </div>
           <div className="toast-content">
             <h4>Real-time Update</h4>

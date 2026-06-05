@@ -9,6 +9,7 @@ import Hero from '../components/Hero';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './Home.css';
+import { API_BASE_URL } from '../config';
 
 const courses = [
   {
@@ -214,6 +215,52 @@ const courses = [
 ];
 
 
+const defaultReviews = [
+  {
+    _id: 'default-1',
+    name: 'Rahul Kumar',
+    rating: 5,
+    text: 'Global Education Guide helped me secure a 100% scholarship for my engineering degree. I couldn\'t have done it without their mentorship.',
+    course: 'B.Tech Student',
+    createdAt: new Date('2026-01-10').toISOString()
+  },
+  {
+    _id: 'default-2',
+    name: 'Priya Singh',
+    rating: 5,
+    text: 'The guidance I received for my medical entrance was invaluable. They truly care about your future and provide end-to-end support.',
+    course: 'MBBS Student',
+    createdAt: new Date('2026-02-15').toISOString()
+  },
+  {
+    _id: 'default-3',
+    name: 'Amit Sharma',
+    rating: 5,
+    text: 'I am now studying in Canada thanks to the immigration assistance provided by the foundation. Highly recommended!',
+    course: 'International Student',
+    createdAt: new Date('2026-03-20').toISOString()
+  }
+];
+
+const getAvatarColor = (name) => {
+  const colors = [
+    '#22c55e', // green
+    '#3b82f6', // blue
+    '#f97316', // orange
+    '#a855f7', // purple
+    '#ec4899', // pink
+    '#06b6d4', // cyan
+    '#f43f5e', // rose
+  ];
+  if (!name) return colors[0];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+};
+
 const Home = () => {
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [activeCategory, setActiveCategory] = useState('all');
@@ -221,6 +268,22 @@ const Home = () => {
     const [searchInput, setSearchInput] = useState('');
     const [aiSummary, setAiSummary] = useState(null);
     const [aiLoading, setAiLoading] = useState(false);
+    const [reviews, setReviews] = useState([]);
+    const [reviewsLoading, setReviewsLoading] = useState(true);
+
+    // Write a review form states
+    const [writeReviewOpen, setWriteReviewOpen] = useState(false);
+    const [revName, setRevName] = useState('');
+    const [revCourse, setRevCourse] = useState('');
+    const [revRating, setRevRating] = useState(5);
+    const [revHoverRating, setRevHoverRating] = useState(0);
+    const [revText, setRevText] = useState('');
+    const [revSubmitLoading, setRevSubmitLoading] = useState(false);
+    const [revSuccess, setRevSuccess] = useState(false);
+    const [revError, setRevError] = useState('');
+    const [reviewsPage, setReviewsPage] = useState(1);
+    const [reviewsTotalPages, setReviewsTotalPages] = useState(1);
+    const [loadingMoreReviews, setLoadingMoreReviews] = useState(false);
 
     const runSearch = () => {
         const query = searchInput.trim();
@@ -266,12 +329,134 @@ const Home = () => {
         return matchesCategory && matchesSearch;
     });
 
+    const fetchReviews = async (page = 1, append = false) => {
+        if (page > 1) {
+            setLoadingMoreReviews(true);
+        } else {
+            setReviewsLoading(true);
+        }
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/reviews?page=${page}&limit=6`);
+            const data = await res.json();
+            if (data.success) {
+                if (append) {
+                    setReviews(prev => [...prev, ...data.data]);
+                } else {
+                    setReviews(data.data);
+                }
+                setReviewsPage(data.pagination.currentPage);
+                setReviewsTotalPages(data.pagination.totalPages);
+            }
+        } catch (err) {
+            console.error('Error fetching reviews:', err);
+        } finally {
+            setReviewsLoading(false);
+            setLoadingMoreReviews(false);
+        }
+    };
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        setRevSubmitLoading(true);
+        setRevError('');
+        setRevSuccess(false);
+
+        const cleanName = revName.trim();
+        const cleanCourse = revCourse.trim();
+        const cleanText = revText.trim();
+
+        if (!cleanName || !cleanCourse || !cleanText) {
+            setRevError('All fields are required.');
+            setRevSubmitLoading(false);
+            return;
+        }
+
+        if (!/^[a-zA-Z\s]{2,50}$/.test(cleanName)) {
+            setRevError('Name must contain only letters and spaces, and be between 2 and 50 characters.');
+            setRevSubmitLoading(false);
+            return;
+        }
+
+        if (cleanCourse.length < 2 || cleanCourse.length > 100) {
+            setRevError('Course/Designation must be between 2 and 100 characters.');
+            setRevSubmitLoading(false);
+            return;
+        }
+
+        if (cleanText.length < 5 || cleanText.length > 1000) {
+            setRevError('Review text must be between 5 and 1000 characters.');
+            setRevSubmitLoading(false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/submissions/review`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: cleanName,
+                    rating: revRating,
+                    text: cleanText,
+                    course: cleanCourse
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                setRevSuccess(true);
+                setRevName('');
+                setRevCourse('');
+                setRevRating(5);
+                setRevText('');
+            } else {
+                setRevError(data.message || 'Failed to submit review. Please try again.');
+            }
+        } catch (err) {
+            console.error(err);
+            setRevError('Failed to connect to server. Please try again later.');
+        } finally {
+            setRevSubmitLoading(false);
+        }
+    };
+
+    const renderStars = (rating) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <span key={i} className={`star ${i <= rating ? 'filled' : 'empty'}`}>★</span>
+            );
+        }
+        return stars;
+    };
+
+    const renderInteractiveStars = () => {
+        return (
+            <div className="interactive-stars">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <span 
+                        key={star}
+                        className={`interactive-star ${(revHoverRating || revRating) >= star ? 'active' : ''}`}
+                        onClick={() => setRevRating(star)}
+                        onMouseEnter={() => setRevHoverRating(star)}
+                        onMouseLeave={() => setRevHoverRating(0)}
+                    >
+                        ★
+                    </span>
+                ))}
+            </div>
+        );
+    };
+
     useEffect(() => {
         AOS.init({
             duration: 1000,
             once: true,
             offset: 100,
         });
+        fetchReviews(1, false);
     }, []);
 
     return (
@@ -628,37 +813,157 @@ const Home = () => {
             </section>
 
             {/* Testimonials / Success Stories */}
-            <section className="section" id="testimonials">
+            <section className="section testimonials-section" id="testimonials">
                 <div className="container">
                     <div className="section-header" data-aos="fade-up">
+                        <div className="pill-tag">— Testimonials</div>
                         <h2 className="section-title">What Our Students Say</h2>
                         <p className="section-subtitle">Hear from the students whose lives have been transformed.</p>
                     </div>
+
                     <div className="testimonials-grid">
-                        <div className="testimonial-card" data-aos="fade-right">
-                            <div className="quote-icon">❝</div>
-                            <p className="testimonial-text">Global Education Guide helped me secure a 100% scholarship for my engineering degree. I couldn't have done it without their mentorship.</p>
-                            <div className="testimonial-author">
-                                <h4>Rahul Kumar</h4>
-                                <span>B.Tech Student</span>
+                        {[...reviews, ...defaultReviews].map((rev, idx) => {
+                            const initial = rev.name ? rev.name.charAt(0).toUpperCase() : '?';
+                            const avatarColor = getAvatarColor(rev.name);
+                            return (
+                                <div 
+                                    key={rev._id || idx} 
+                                    className="testimonial-card" 
+                                    data-aos="fade-up" 
+                                    data-aos-delay={(idx % 3) * 100}
+                                >
+                                    <div className="testimonial-stars">
+                                        {renderStars(rev.rating)}
+                                    </div>
+                                    <p className="testimonial-text">
+                                        &ldquo;{rev.text}&rdquo;
+                                    </p>
+                                    <div className="testimonial-author-wrapper">
+                                        <div className="reviewer-avatar" style={{ backgroundColor: avatarColor }}>
+                                            {initial}
+                                        </div>
+                                        <div className="testimonial-author">
+                                            <h4>{rev.name}</h4>
+                                            <span>{rev.course}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginTop: '2rem', marginBottom: '2rem' }} data-aos="fade-up">
+                        {reviewsPage < reviewsTotalPages && (
+                            <button 
+                                className="btn btn-accent"
+                                onClick={() => fetchReviews(reviewsPage + 1, true)}
+                                disabled={loadingMoreReviews}
+                                style={{ padding: '10px 24px', fontSize: '0.95rem' }}
+                            >
+                                {loadingMoreReviews ? <span className="btn-spinner"></span> : 'Load More Reviews'}
+                            </button>
+                        )}
+                        {reviewsPage > 1 && (
+                            <button 
+                                className="btn btn-secondary"
+                                onClick={() => fetchReviews(1, false)}
+                                style={{ padding: '10px 24px', fontSize: '0.95rem' }}
+                            >
+                                Show Less
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="write-review-container" data-aos="fade-up">
+                        {!writeReviewOpen ? (
+                            <div style={{ textAlign: 'center', marginTop: '3.5rem' }}>
+                                <button 
+                                    className="btn btn-accent"
+                                    onClick={() => setWriteReviewOpen(true)}
+                                >
+                                    Write a Review
+                                </button>
                             </div>
-                        </div>
-                        <div className="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-                            <div className="quote-icon">❝</div>
-                            <p className="testimonial-text">The guidance I received for my medical entrance was invaluable. They truly care about your future and provide end-to-end support.</p>
-                            <div className="testimonial-author">
-                                <h4>Priya Singh</h4>
-                                <span>MBBS Student</span>
+                        ) : (
+                            <div className="review-form-card">
+                                <div className="review-form-header">
+                                    <h3>Share Your Experience</h3>
+                                    <button 
+                                        className="btn-close-review"
+                                        onClick={() => { setWriteReviewOpen(false); setRevSuccess(false); setRevError(''); }}
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
+
+                                {revSuccess ? (
+                                    <div className="review-success-container">
+                                        <div className="success-icon-check">✓</div>
+                                        <h3>Review Submitted!</h3>
+                                        <p>Thank you for your feedback! Your review will be visible on the website once approved by our administrator.</p>
+                                        <button 
+                                            className="btn btn-accent btn-sm" 
+                                            onClick={() => setRevSuccess(false)}
+                                            style={{ marginTop: '15px' }}
+                                        >
+                                            Submit Another Review
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <form className="review-form" onSubmit={handleReviewSubmit}>
+                                        {revError && (
+                                            <div className="form-floating-error" style={{ position: 'relative', top: '0', left: '0', right: '0', transform: 'none', width: '100%', marginBottom: '1.5rem' }}>
+                                                <span>⚠️ {revError}</span>
+                                                <button type="button" className="error-close-btn" onClick={() => setRevError('')}>&times;</button>
+                                            </div>
+                                        )}
+
+                                        <div className="form-grid">
+                                            <div className="form-group">
+                                                <label>Full Name</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Your Name" 
+                                                    value={revName}
+                                                    onChange={(e) => setRevName(e.target.value)}
+                                                    required 
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Course / College (e.g. B.Tech Student / LPU)</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="e.g. B.Tech Student, LPU" 
+                                                    value={revCourse}
+                                                    onChange={(e) => setRevCourse(e.target.value)}
+                                                    required 
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label>Your Rating</label>
+                                            {renderInteractiveStars()}
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label>Your Review</label>
+                                            <textarea 
+                                                placeholder="Write your review here (minimum 5 characters)..." 
+                                                rows="4"
+                                                value={revText}
+                                                onChange={(e) => setRevText(e.target.value)}
+                                                required
+                                            ></textarea>
+                                        </div>
+
+                                        <button type="submit" className="btn btn-accent btn-block" disabled={revSubmitLoading}>
+                                            {revSubmitLoading ? <span className="btn-spinner"></span> : 'Submit Review'}
+                                        </button>
+                                    </form>
+                                )}
                             </div>
-                        </div>
-                        <div className="testimonial-card" data-aos="fade-left" data-aos-delay="200">
-                            <div className="quote-icon">❝</div>
-                            <p className="testimonial-text">I am now studying in Canada thanks to the immigration assistance provided by the foundation. Highly recommended!</p>
-                            <div className="testimonial-author">
-                                <h4>Amit Sharma</h4>
-                                <span>International Student</span>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </section>

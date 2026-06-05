@@ -785,3 +785,73 @@
     max-width: none;
   }
 }
+
+/* Reviews styling inside admin panel */
+.admin-dashboard-container .rev-icon {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.realtime-toast.reviews {
+  border-left: 5px solid #d97706;
+}
+
+.realtime-toast.reviews .toast-icon {
+  color: #fbbf24;
+}
+
+.review-stars-admin {
+  color: #ffc107;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.action-approve-btn {
+  background: none;
+  border: none;
+  color: #10b981;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 15px;
+  margin-right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.action-approve-btn:hover {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.action-approve-btn:disabled {
+  color: #cbd5e1;
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.approved {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
