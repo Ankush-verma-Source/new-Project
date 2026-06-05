@@ -39,15 +39,28 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
+    
+    // Fallback: If no ALLOWED_ORIGINS env variable is set, or if it is set to '*', allow all origins
+    if (allowedOrigins.length === 0 || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    
+    // Normalizer checks for www vs non-www
+    const originNonWww = origin.replace(/^https?:\/\/www\./, 'https://');
+    const originWww = origin.replace(/^https?:\/\/(?!www\.)/, 'https://www.');
+
     if (
       process.env.NODE_ENV !== 'production' ||
       allowedOrigins.includes(origin) ||
-      allowedOrigins.includes('*') ||
+      allowedOrigins.includes(originNonWww) ||
+      allowedOrigins.includes(originWww) ||
       ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'].includes(origin)
     ) {
       return callback(null, true);
     }
-    return callback(new Error('Not allowed by CORS'));
+    
+    // Graceful reject instead of throwing a 500 error
+    return callback(null, false);
   },
   credentials: true
 }));
